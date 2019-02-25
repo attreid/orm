@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 
 /**
  * This file is part of the Nextras\Orm library.
@@ -282,12 +282,15 @@ abstract class HasMany implements IRelationshipCollection
 			$collection = new EmptyCollection();
 		}
 
-		if ($this->toAdd || $this->toRemove) {
+		if ($this->toAdd || $this->tracked || $this->toRemove) {
 			$all = [];
 			foreach ($collection as $entity) {
 				$all[spl_object_hash($entity)] = $entity;
 			}
 			foreach ($this->toAdd as $hash => $entity) {
+				$all[$hash] = $entity;
+			}
+			foreach ($this->tracked as $hash => $entity) {
 				$all[$hash] = $entity;
 			}
 			foreach ($this->toRemove as $hash => $entity) {
@@ -306,7 +309,7 @@ abstract class HasMany implements IRelationshipCollection
 
 
 	/**
-	 * @param  IEntity|mixed    $entity
+	 * @param  IEntity|mixed $entity
 	 */
 	protected function createEntity($entity, bool $need = true): ?IEntity
 	{
